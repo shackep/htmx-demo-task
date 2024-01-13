@@ -17,7 +17,7 @@ class TaskController extends Controller
             // If they do, set it as the session group_key
             session(['group_key' => $group_key]);
             $uniqueid = $group_key;
-        } elseif(!session('group_key')) {
+        } elseif(!session('group_key')||request('new_group_key')) {
             // If no group_key is provided in the URL one does not exist in the session, generate a new one
             $uniqueid = $this->generateUniqueGroupKey();
             session(['group_key' => $uniqueid]);
@@ -36,7 +36,7 @@ class TaskController extends Controller
         )->where('group_key', $uniqueid)->get();
 
         $count = $tasks->count();
-        return view('tasks.index', compact('tasks', 'count'));
+        return response()->view('tasks.index', compact('tasks', 'count'))->header('HX-Push', url('/tasks/' . $uniqueid));
     }
 
     private function generateUniqueGroupKey()

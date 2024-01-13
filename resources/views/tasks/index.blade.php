@@ -7,6 +7,7 @@
     @endif
     @include('tasks.count')
     @include('tasks.new')
+    <button type="button" hx-confirm="Are you sure you wish to leave this list and start another one? This is your chance to make sure you have this url to come back to: {{ url('/tasks/' . session('group_key')) }}" hx-replace-url="true" hx-get="{{ route('tasks.index') }}?new_group_key=true" hx-target='body' hx-swap='outerHTML'>Start new task list</button>
     @include('tasks.tasks')
     <div style="text-align: center;margin:32px">
         <img width="90%" loading="lazy" src="{{ asset('resources/images/createdwith.jpeg') }}">
