@@ -36,8 +36,14 @@ class TaskController extends Controller
         )->where('group_key', $uniqueid)->get();
         $task = Task::where('group_key', $uniqueid)->first();
         $list_name = $task ? $task->list_name : null;
+
         $count = $tasks->count();
         $lists = $this->getOtherLists($request, $uniqueid);
+        if ($list_name) {
+            return response()->view('tasks.index', compact('tasks', 'count', 'list_name', 'lists'))
+                ->header('HX-Push', url('/tasks/' . $uniqueid))
+                ->withCookie(cookie('task_'.$uniqueid, $list_name, 60 * 24 * 365));
+        }
         return response()->view('tasks.index', compact('tasks', 'count', 'list_name', 'lists'))->header('HX-Push', url('/tasks/' . $uniqueid));
     }
 
