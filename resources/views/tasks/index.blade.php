@@ -12,7 +12,7 @@
     <h2>Your other task lists</h2>
     <ul>
     @foreach ($lists as $list_group_key => $name)
-        <li><a href="{{ url('/tasks/' . $list_group_key) }}">{{ $name }}</a></li>
+        <li><a href="{{ url('/tasks/' . $list_group_key) }}">{{ $name ?? 'Task List' }}</a></li>
     @endforeach
     </ul>
 
