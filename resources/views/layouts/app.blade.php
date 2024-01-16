@@ -10,9 +10,10 @@
 </head>
 <body>
     <!-- Your navigation or header content -->
-    
+ <main>   
     @yield('content')
     
     <!-- Your footer or additional content Bar -->
+</main>
 </body>
 </html>
