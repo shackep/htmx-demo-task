@@ -26,4 +26,7 @@ Route::patch('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.up
 Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
 
+Route::get('/tasks/{group_key}/editname', [TaskController::class, 'editname'])->name('tasks.editname');
+Route::post('/tasks/{group_key}/namelist', [TaskController::class, 'namelist'])->name('tasks.namelist');
+
 

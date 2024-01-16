@@ -4,7 +4,9 @@
  crossorigin="anonymous"></script> 
  <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
 <script>htmx.config.useTemplateFragments = true;</script>
-
+<head>
+    <title>{{ $list_name }}</title>
+</head>
 <body>
     <!-- Your navigation or header content -->
     

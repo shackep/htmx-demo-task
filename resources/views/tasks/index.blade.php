@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Task List</h1>
+    @include('tasks.title')
+    <button hx-get="{{ route('tasks.editname', session('group_key')) }}" hx-target="h1" hx-select='form'>Rename List</button>
     @if(session('group_key'))
     <p>Save this link to come back to your task list: <a href="{{ url('/tasks/' . session('group_key')) }}">{{ url('/tasks/' . session('group_key')) }}</a></p>
     @endif

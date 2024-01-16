@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 class Task extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','done','order','group_key'];
+    protected $fillable = ['name','done','order','group_key', 'list_name'];
 
     protected static function boot()
 {
