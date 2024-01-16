@@ -2,15 +2,10 @@
 
 @section('content')
     @include('tasks.title')
-    <p><button hx-get="{{ route('tasks.editname', session('group_key')) }}" hx-target="h1" hx-select='form'>Rename List</button></p>
-    @if(session('group_key'))
-    <p>Save this link to come back to your task list: <a href="{{ url('/tasks/' . session('group_key')) }}">{{ url('/tasks/' . session('group_key')) }}</a></p>
-    @endif
+    <p><button hx-get="{{ route('tasks.editname', session('group_key')) }}" hx-target="h1" hx-select='form'>Rename this List</button>
+    <button type="button" hx-replace-url="true" hx-get="{{ route('tasks.index') }}?new_group_key=true" hx-target='body' hx-swap='outerHTML'>Start new task list</button></p>
 @include('tasks.count')
     @include('tasks.new')
-
-
-    <button type="button" hx-replace-url="true" hx-get="{{ route('tasks.index') }}?new_group_key=true" hx-target='body' hx-swap='outerHTML'>Start new task list</button>
     @include('tasks.tasks')
 
 @if (count($lists) > 0)
