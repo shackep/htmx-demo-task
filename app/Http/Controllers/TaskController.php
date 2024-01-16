@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Session;
 
 class TaskController extends Controller
 {
-
-    public function index($group_key = null)
+    public function index(Request $request, $group_key = null)
     {
         // If a group_key is provided in the URL
         // Check if tasks with that group_key exist
@@ -18,7 +17,7 @@ class TaskController extends Controller
             // If they do, set it as the session group_key
             session(['group_key' => $group_key]);
             $uniqueid = $group_key;
-        } elseif(!session('group_key')||request('new_group_key')) {
+        } elseif(!session('group_key') || request('new_group_key')) {
             // If no group_key is provided in the URL one does not exist in the session, generate a new one
             $uniqueid = $this->generateUniqueGroupKey();
             session(['group_key' => $uniqueid]);
@@ -35,9 +34,36 @@ class TaskController extends Controller
                 return $query->where('done', 1);
             }
         )->where('group_key', $uniqueid)->get();
-        $list_name = Task::where('group_key', $uniqueid)->first()->list_name;
+        $task = Task::where('group_key', $uniqueid)->first();
+        $list_name = $task ? $task->list_name : null;
         $count = $tasks->count();
-        return response()->view('tasks.index', compact('tasks', 'count','list_name'))->header('HX-Push', url('/tasks/' . $uniqueid));
+        $lists = $this->getOtherLists($request, $uniqueid);
+        return response()->view('tasks.index', compact('tasks', 'count', 'list_name', 'lists'))->header('HX-Push', url('/tasks/' . $uniqueid));
+    }
+
+    private function getOtherLists(Request $request, $currentGroupKey)
+    {
+        $cookies = $request->cookies->all();
+        $taskLists = [];
+
+        foreach ($cookies as $name => $value) {
+            if (Str::startsWith($name, 'task_')) {
+                $group_key = substr($name, strlen('task_')); // get the string after 'task_'
+                // Skip the current list
+                if ($group_key === $currentGroupKey) {
+                    continue;
+                }
+
+                $list_name = Task::where('group_key', $group_key)->select('list_name')->first();
+
+                if ($list_name) {
+                    $taskLists[$group_key] = $list_name->list_name;
+                }
+
+
+            }
+        }
+        return $taskLists;
     }
 
     private function generateUniqueGroupKey()
@@ -91,15 +117,16 @@ class TaskController extends Controller
 
     public function editname($group_key)
     {
-        $list_name = Task::where('group_key',$group_key)->first()->list_name;
-        return response(view('tasks.change_title',['group_key' => $group_key, 'list_name' => $list_name]), 200);
+        $list_name = Task::where('group_key', $group_key)->first()->list_name;
+        return response(view('tasks.change_title', ['group_key' => $group_key, 'list_name' => $list_name]), 200);
     }
 
     public function namelist(Request $request, $group_key)
     {
         // Add new list name to all tasks with the same group_key
-        Task::where('group_key',$group_key)->update(['list_name' => $request->input('list_name')]);
-        $list_name = Task::where('group_key',$group_key)->first()->list_name;
-        return response(view('tasks.title',['list_name'=>$list_name ]), 200);
+        Task::where('group_key', $group_key)->update(['list_name' => $request->input('list_name')]);
+
+        $list_name = Task::where('group_key', $group_key)->first()->list_name;
+        return response(view('tasks.title', ['list_name' => $list_name ]), 200)->withCookie(cookie('task_'.$group_key, $list_name, 60 * 24 * 365));
     }
 }

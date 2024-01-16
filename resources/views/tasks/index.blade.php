@@ -6,10 +6,23 @@
     @if(session('group_key'))
     <p>Save this link to come back to your task list: <a href="{{ url('/tasks/' . session('group_key')) }}">{{ url('/tasks/' . session('group_key')) }}</a></p>
     @endif
-    @include('tasks.count')
+@include('tasks.count')
     @include('tasks.new')
-    <button type="button" hx-confirm="Are you sure you wish to leave this list and start another one? This is your chance to make sure you have this url to come back to: {{ url('/tasks/' . session('group_key')) }}" hx-replace-url="true" hx-get="{{ route('tasks.index') }}?new_group_key=true" hx-target='body' hx-swap='outerHTML'>Start new task list</button>
+
+
+    <button type="button" hx-replace-url="true" hx-get="{{ route('tasks.index') }}?new_group_key=true" hx-target='body' hx-swap='outerHTML'>Start new task list</button>
     @include('tasks.tasks')
+
+@if (count($lists) > 0)
+    <h2>Your other task lists</h2>
+    <ul>
+    @foreach ($lists as $list_group_key => $name)
+        <li><a href="{{ url('/tasks/' . $list_group_key) }}">{{ $name }}</a></li>
+    @endforeach
+    </ul>
+
+@endif
+
     <div style="text-align: center;margin:32px">
         <img width="90%" loading="lazy" src="{{ asset('resources/images/createdwith.jpeg') }}">
     </div>
