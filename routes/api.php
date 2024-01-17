@@ -29,4 +29,6 @@ Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.e
 Route::get('/tasks/{group_key}/editname', [TaskController::class, 'editname'])->name('tasks.editname');
 Route::post('/tasks/{group_key}/namelist', [TaskController::class, 'namelist'])->name('tasks.namelist');
 
+Route::get('/style/{style}', [TaskController::class, 'style'])->name('style');
+
 

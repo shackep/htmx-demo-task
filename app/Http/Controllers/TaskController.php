@@ -135,4 +135,26 @@ class TaskController extends Controller
         $list_name = Task::where('group_key', $group_key)->first()->list_name;
         return response(view('tasks.title', ['list_name' => $list_name ]), 200)->withCookie(cookie('task_'.$group_key, $list_name, 60 * 24 * 365));
     }
+
+    public function style($style)
+{
+    // Define the stylesheets
+    $stylesheets = [
+        'simple' => 'https://unpkg.com/simpledotcss/simple.min.css',
+        'missing' => 'https://unpkg.com/missing.css@1.1.1',
+        'sakura' => 'https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css',
+    ];
+
+    // Check if the provided style exists in the stylesheets array
+    if (!array_key_exists($style, $stylesheets)) {
+        // If not, default to the first stylesheet
+        $style = 'simple';
+    }
+
+    // Get the path to the stylesheet
+    $stylesheet = $stylesheets[$style];
+
+    // Return the style view with the stylesheet
+    return response(view('style', ['stylesheet' => $stylesheet]), 200);
+}
 }
