@@ -1,0 +1,1 @@
+<link  id='style' hx-swap-oob=true rel="stylesheet" href="{{ $stylesheet }}">

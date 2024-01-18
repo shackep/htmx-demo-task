@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 
 class TaskController extends Controller
@@ -38,13 +39,14 @@ class TaskController extends Controller
         $list_name = $task ? $task->list_name : null;
 
         $count = $tasks->count();
+        $style = Cookie::get('style');
         $lists = $this->getOtherLists($request, $uniqueid);
         if ($list_name) {
-            return response()->view('tasks.index', compact('tasks', 'count', 'list_name', 'lists'))
+            return response()->view('tasks.index', compact('tasks', 'count', 'list_name', 'lists', 'style'))
                 ->header('HX-Push', url('/tasks/' . $uniqueid))
                 ->withCookie(cookie('task_'.$uniqueid, $list_name, 60 * 24 * 365));
         }
-        return response()->view('tasks.index', compact('tasks', 'count', 'list_name', 'lists'))->header('HX-Push', url('/tasks/' . $uniqueid));
+        return response()->view('tasks.index', compact('tasks', 'count', 'list_name', 'lists','style'))->header('HX-Push', url('/tasks/' . $uniqueid));
     }
 
     private function getOtherLists(Request $request, $currentGroupKey)
@@ -137,7 +139,7 @@ class TaskController extends Controller
     }
 
     public function style($style)
-{
+    {
     // Define the stylesheets
     $stylesheets = [
         'simple' => 'https://unpkg.com/simpledotcss/simple.min.css',
@@ -147,14 +149,21 @@ class TaskController extends Controller
 
     // Check if the provided style exists in the stylesheets array
     if (!array_key_exists($style, $stylesheets)) {
-        // If not, default to the first stylesheet
-        $style = 'simple';
+        // If not, check if a style cookie exists
+        if (Cookie::get('style') && array_key_exists(Cookie::get('style'), $stylesheets)) {
+            // If a style cookie exists and its value is a valid style, use it
+            $style = Cookie::get('style');
+        } else {
+            // If not, default to the first stylesheet
+            $style = 'simple';
+        }
     }
-
     // Get the path to the stylesheet
     $stylesheet = $stylesheets[$style];
+    $cookie = cookie('style', $style, 60 * 24 * 30);
 
     // Return the style view with the stylesheet
-    return response(view('style', ['stylesheet' => $stylesheet]), 200);
+        return response(view('style', ['stylesheet' => $stylesheet]))->withCookie($cookie);
+    }
 }
-}
+
