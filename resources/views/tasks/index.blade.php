@@ -3,13 +3,13 @@
 @section('content')
     @include('tasks.title')
     <p><button hx-get="{{ route('tasks.editname', session('group_key')) }}" hx-target="h1" hx-select='form'>Rename this List</button>
-    <button type="button" hx-replace-url="true" hx-get="{{ route('tasks.index') }}?new_group_key=true" hx-target='body' hx-swap='outerHTML'>Start new task list</button></p>
+    <button type="button" hx-replace-url="true" hx-get="{{ route('tasks.index') }}?new_group_key=true" hx-target='body' hx-swap='outerHTML'>Start new list</button></p>
 @include('tasks.count')
     @include('tasks.new')
     @include('tasks.tasks')
 
 @if (count($lists) > 0)
-    <h2>Your other task lists</h2>
+    <h2>Your other lists</h2>
     <ul>
     @foreach ($lists as $list_group_key => $name)
         <li><a href="{{ url('/tasks/' . $list_group_key) }}">{{ $name ?? 'Task List' }}</a></li>

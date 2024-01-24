@@ -4,12 +4,8 @@
 <script src="https://unpkg.com/htmx.org@1.9.10"
  crossorigin="anonymous"></script> 
  <script>htmx.config.useTemplateFragments = true;</script>
-
- <!-- <link hx-get="{{ route('style', ['style' => 'simple']) }}" hx-trigger=load hx-target=this hx-swap='outerHTML' id='style' rel="stylesheet" href="https://unpkg.com/missing.css@1.1.1"> -->
-
-
     <title>{{ $list_name }}</title>
-    <link id='style' rel="stylesheet" href="https://unpkg.com/missing.css@1.1.1">
+    <link id='style' rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
 </head>
 <body>
     <!-- Your navigation or header content -->

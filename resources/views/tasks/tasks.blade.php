@@ -18,7 +18,7 @@
 <table>
     <thead>
         <tr>
-          <th>Task</th>
+          <th>Item</th>
           <th>Action</th>
         </tr>
     </thead>
